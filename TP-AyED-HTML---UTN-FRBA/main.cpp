@@ -5,17 +5,46 @@
 
 using namespace std;
 
-void cargarArchivoAtaqueMemoria();
-void mostrarAtaqueCargado();
+struct Orden {
+
+  unsigned int espera  = 0;
+  bool soltarGranada1 = false;
+  bool soltarGranada2 = false;
+  bool ataqueKamikaze = false;
+  bool aterrizaje = false;
+  bool despegue = false;
+  int siguientex =0;
+  int siguientey= 0;
+
+};
+
+struct OrdenArchivo{
+
+  int x =0;
+  int y =0;
+  unsigned int espera  = 0;
+  bool soltarGranada1 = false;
+  bool soltarGranada2 = false;
+  bool ataqueKamikaze = false;
+  bool aterrizaje = false;
+  bool despegue = false;
+  int siguientex =0;
+  int siguientey= 0;
+
+};
+
+void cargarArchivoAtaqueMemoria(Orden memoria[200][200]);
+void mostrarAtaqueCargado(Orden memoria[200][200]);
 void crearArchivoAtaqueNuevo();
 void corregirRegistroArchivo();
-void corregirRegistroMemoria();
-void guardarMemoriaArchivoNuevo();
-void visualizarArchivoAtaqueHTML();
+void corregirRegistroMemoria(Orden memoria[200][200]);
+void guardarMemoriaArchivoNuevo(Orden memoria[200][200]);
+void visualizarArchivoAtaqueHTML(Orden memoria[200][200]);
 
 int main(){
 
     int opcion;
+    Orden memoriaDron[200][200];
 
 
     do{
@@ -37,13 +66,13 @@ int main(){
     switch(opcion){
 
         case 1:
-            cargarArchivoAtaqueMemoria();
+            cargarArchivoAtaqueMemoria(memoriaDron);
 
 
         break;
 
         case 2:
-            mostrarAtaqueCargado();
+            mostrarAtaqueCargado(memoriaDron);
 
 
         break;
@@ -61,19 +90,19 @@ int main(){
         break;
 
         case 5:
-            corregirRegistroMemoria();
+            corregirRegistroMemoria(memoriaDron);
 
 
         break;
 
         case 6:
-            guardarMemoriaArchivoNuevo();
+            guardarMemoriaArchivoNuevo(memoriaDron);
 
 
         break;
 
         case 7:
-            visualizarArchivoAtaqueHTML();
+            visualizarArchivoAtaqueHTML(memoriaDron);
 
 
         break;
@@ -95,11 +124,12 @@ int main(){
     return 0;
 }
 
-void cargarArchivoAtaqueMemoria(){
+void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
+
 
 }
 
-void mostrarAtaqueCargado(){
+void mostrarAtaqueCargado(Orden memoria[200][200]){
 
 }
 
@@ -111,15 +141,15 @@ void corregirRegistroArchivo(){
 
 }
 
-void corregirRegistroMemoria(){
+void corregirRegistroMemoria(Orden memoria[200][200]){
 
 }
 
-void guardarMemoriaArchivoNuevo(){
+void guardarMemoriaArchivoNuevo(Orden memoria[200][200]){
 
 }
 
-void visualizarArchivoAtaqueHTML(){
+void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
 
 }
 

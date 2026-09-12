@@ -5,7 +5,13 @@
 
 using namespace std;
 
-
+void cargarArchivoAtaqueMemoria();
+void mostrarAtaqueCargado();
+void crearArchivoAtaqueNuevo();
+void corregirRegistroArchivo();
+void corregirRegistroMemoria();
+void guardarMemoriaArchivoNuevo();
+void visualizarArchivoAtaqueHTML();
 
 int main(){
 
@@ -22,6 +28,7 @@ int main(){
     cout<<"5. Corregir un registro en memoria."<<endl;
     cout<<"6. Guardar memoria en un archivo nuevo."<<endl;
     cout<<"7. Visualizar un archivo de ataque en html. "<<endl;
+    cout<<"0/8 Salir"<<endl;
 
     cout<<endl<<"Opcion: "<<endl;
     cin>>opcion;
@@ -30,31 +37,43 @@ int main(){
     switch(opcion){
 
         case 1:
+            cargarArchivoAtaqueMemoria();
 
 
         break;
+
         case 2:
+            mostrarAtaqueCargado();
 
 
         break;
+
         case 3:
+            crearArchivoAtaqueNuevo();
 
 
         break;
+
         case 4:
+            corregirRegistroArchivo();
 
 
         break;
+
         case 5:
+            corregirRegistroMemoria();
 
 
         break;
+
         case 6:
+            guardarMemoriaArchivoNuevo();
 
 
         break;
 
         case 7:
+            visualizarArchivoAtaqueHTML();
 
 
         break;
@@ -75,3 +94,32 @@ int main(){
 
     return 0;
 }
+
+void cargarArchivoAtaqueMemoria(){
+
+}
+
+void mostrarAtaqueCargado(){
+
+}
+
+void crearArchivoAtaqueNuevo(){
+
+}
+
+void corregirRegistroArchivo(){
+
+}
+
+void corregirRegistroMemoria(){
+
+}
+
+void guardarMemoriaArchivoNuevo(){
+
+}
+
+void visualizarArchivoAtaqueHTML(){
+
+}
+

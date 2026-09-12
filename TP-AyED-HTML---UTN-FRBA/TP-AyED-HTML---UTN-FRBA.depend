@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1789243394 source:c:\users\roman\onedrive\escritorio\tp-ayed-html---utn-frba\main.cpp
+1789253490 source:c:\users\roman\onedrive\escritorio\tp-ayed-html---utn-frba\main.cpp
 	<iostream>
 	<windows.h>
 	<locale.h>
 	<stdlib.h>
+	<string.h>
 

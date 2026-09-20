@@ -139,6 +139,83 @@ void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
 
 void mostrarAtaqueCargado(Orden memoria[200][200]){
 
+    Orden *auxAtaque;
+    int pagina = 1;
+    int columna, fila;
+    int datos_por_pagina = 10;
+    char opcion;
+
+    do{
+        //calculo columna
+
+        columna = ((pagina-1)*datos_por_pagina)/200;
+
+        //calculo fila
+
+        fila = (pagina-1)*datos_por_pagina - (columna*200);
+
+        //mostrar datos
+
+        for(int i = 0;i < datos_por_pagina;i++){
+            if((fila + i) >= 200){
+                columna++;
+                fila -= 200;
+            }
+            auxAtaque = &memoria[fila + i ][columna];
+
+
+            if(auxAtaque == NULL){
+                cout<<"Coordenadas: "<<endl;
+                cout << "X: "<< fila+i<<endl;
+
+                cout << "Y: "<< columna<<endl;
+
+                cout<<"Sin datos"<<endl;
+                continue;
+            }
+            else{
+                cout<<"Coordenadas: "<<endl;
+                cout << "X: "<< fila+i<<endl;
+
+                cout << "Y: "<< columna<<endl;
+
+                cout<<endl;
+                cout << "Espera (segundos): " << auxAtaque->espera<<endl;
+
+                cout<<"Explosivos:"<<endl;
+                cout<<"Granada 1: "<< auxAtaque->soltarGranada1<<endl;
+                cout<<"Granada 2: "<< auxAtaque->soltarGranada2<<endl;
+
+                cout<<"Ataque kamikaze: "<< auxAtaque->ataqueKamikaze<<endl;
+                cout<<"Aterrizaje: " << auxAtaque->despegue<<endl;
+                cout<<"Despegue: " << auxAtaque->despegue<<endl;
+
+
+                cout<<endl<<"Siguientes coordenadas:"<<endl;
+                cout << "X: " << auxAtaque->siguientex<<endl;
+                cout << "Y: " << auxAtaque->siguientey<<endl;
+
+            }
+
+        }
+        cout<<"Pagina " << pagina<<endl;
+        cout<<"Siguiente pagina con s/S, anterior con a/A "<<endl;
+        cout<<"Si quiere terminar ingrese n/N"<<endl;
+        cin>>opcion;
+        if(opcion == 's' || opcion == 'S'){
+            pagina++;
+        }
+        else if(opcion == 'a' || opcion == 'A'){
+            pagina--;
+        }
+        system("cls");
+        if (pagina <= 0 || pagina*datos_por_pagina >=40000){
+            cout<<"Limite exedido, volviendo a menu"<<endl;
+            // sacado de ia chatgpt xd, simplemnete elimina buffer y espera enter
+            system("pause");
+            return;
+        }
+    }while(opcion!='n' && opcion!='N' );
 }
 
 void crearArchivoAtaqueNuevo(){

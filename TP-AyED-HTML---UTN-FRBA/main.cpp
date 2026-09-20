@@ -134,7 +134,152 @@ int main(){
 
 void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
 
+    char ruta[150];
+    char nombre[150];
+    FILE *f1;
+    char opcion;
+    OrdenArchivo registroTemp;
 
+    int Xleidos[40000];
+    int Yleidos[40000];
+    int cantLeidos=0;
+
+    bool primerRegistro=true;
+    int Xanterior;
+    int YAnterior;
+
+
+    bool archivoInvalido=false;
+
+    int despegueCont=0;
+    bool aterrizajeOKamikazeHecho=false;
+
+
+    cout<<"Ingrese ruta en la que esta el ataque que quiere cargar"<<endl;
+    cin>>ruta;
+
+
+    cout<<"Ingrese nombre del archivo del ataque"<<endl;
+    cin>>nombre;
+    system("cls");
+
+
+    strcat(ruta, nombre);
+
+    f1=fopen(ruta,"rb");
+
+    if(f1!=NULL){
+
+      while(fread(&registroTemp, sizeof(OrdenArchivo), 1, f1)){
+
+
+
+             if (aterrizajeOKamikazeHecho){
+
+                cout << "error, se escribio el aterrizaje o el kamikaze mas a de una vez"<<endl;
+                archivoInvalido=true;
+                break;
+
+             }
+
+            if(registroTemp.despegue==true){
+
+                if(registroTemp.soltarGranada1 || registroTemp.soltarGranada2 || registroTemp.ataqueKamikaze){
+
+                    archivoInvalido=true;
+                    cout <<"hubo error al escribir el despegue con otra accion" << endl;
+                    break;
+
+                }else{
+                    despegueCont++;
+
+                    if(despegueCont>1){
+
+                        archivoInvalido=true;
+                        cout << "error, se escribio dos veces el despegue" << endl;
+                        break;
+                    }
+
+
+                }
+
+            }
+
+
+
+            if(registroTemp.aterrizaje || registroTemp.ataqueKamikaze){
+
+                    aterrizajeOKamikazeHecho=true;
+            }
+
+
+            for(int i=0; i<cantLeidos; i++){
+
+                if(registroTemp.x== Xleidos[i] && registroTemp.y== Yleidos[i]){
+
+                    archivoInvalido=true;
+                    cout<<"Error. Colicion de coordenadas"<<endl;
+                    break;
+                    }
+
+            }
+
+            if(archivoInvalido){
+
+                break;
+            }
+
+            Xleidos[cantLeidos]=registroTemp.x;
+            Yleidos[cantLeidos]=registroTemp.y;
+            cantLeidos++;
+
+
+            if (primerRegistro==true){
+
+            Xanterior=registroTemp.siguientex;
+            YAnterior=registroTemp.siguientey;
+
+            primerRegistro=false;
+
+            }else if(primerRegistro==false){
+
+            if(Xanterior!=registroTemp.x || YAnterior!=registroTemp.y){
+
+            cout<<"Error, coordenadas no contiguas"<<endl;
+            archivoInvalido=true;
+            break;
+
+            }else{
+
+              Xanterior=registroTemp.x;
+              YAnterior=registroTemp.y;
+            }
+
+
+      }
+
+      if (registroTemp.siguientex<registroTemp.x-1 ||  registroTemp.siguientex>registroTemp.x+1){
+            archivoInvalido=true;
+            cout << "error, hubo un hueco al escribir las posiciones x" << endl;
+            break;
+      }
+
+      if (registroTemp.siguientey<registroTemp.y-1 || registroTemp.siguientey>registroTemp.y+1){
+            archivoInvalido=true;
+            cout << "error, hubo un hueco al escribir las posiciones y" << endl;
+            break;
+      }
+
+      }//------------- FIN WHILE VALIDACIONES-----------------------------------------------------------------
+
+
+
+
+
+
+    }else{
+        cout<<"Error con el archivo"<<endl;
+    }
 }
 
 void mostrarAtaqueCargado(Orden memoria[200][200]){
@@ -216,6 +361,9 @@ void mostrarAtaqueCargado(Orden memoria[200][200]){
             return;
         }
     }while(opcion!='n' && opcion!='N' );
+
+
+
 }
 
 void crearArchivoAtaqueNuevo(){

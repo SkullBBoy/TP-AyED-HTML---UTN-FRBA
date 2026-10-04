@@ -624,7 +624,35 @@ void corregirRegistroMemoria(Orden memoria[200][200]){
 }
 
 void guardarMemoriaArchivoNuevo(Orden memoria[200][200]){
+    OrdenArchivo registroAtaque;
+    char ruta[150];
+    char nombre[150];
+    FILE *f1;
 
+
+    cout<<"Ingrese ruta"<<endl;
+    cin>>ruta;
+
+    cout<<endl;
+
+    cout<<"Ingrese nombre del archivo"<<endl;
+    cin>>nombre;
+    system("cls");
+
+
+    strcat(ruta, nombre);
+
+    f1=fopen(ruta,"w");
+
+    for(int i;i <200;i++){
+        for(int j;j <200;j++){
+            //aca depende mucho de que te pida pero al final pasa algo como
+            fwrite(&registroAtaque, sizeof(OrdenArchivo), 1, f1);
+        }
+    }
+    // en este 2 opciones, o un ataque se guarda que es complejo o solo matriz que es facil
+
+    return;
 }
 
 void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){

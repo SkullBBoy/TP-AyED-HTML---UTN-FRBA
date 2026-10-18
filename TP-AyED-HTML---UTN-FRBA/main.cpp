@@ -657,5 +657,62 @@ void guardarMemoriaArchivoNuevo(Orden memoria[200][200]){
 
 void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
 
+    //Escritura inicial
+    FILE *archivo;
+    char* nombreArchivo = "index.html";
+    archivo = fopen(nombreArchivo, "w");
+    const char* clase = "vacio";
+
+    if (archivo == NULL)
+    {
+        printf("No se creo el archivo.\n");
+        return;
+    }
+
+
+    fprintf(archivo, "<html>\n");
+    fprintf(archivo, "<head>\n");
+    fprintf(archivo, "<title>Ataque del dron</title>\n");
+
+    fprintf(archivo, "<style>\n");
+    fprintf(archivo, "table { border-collapse: collapse; }\n");
+    fprintf(archivo, "td { width: 20px; height: 20px; border: 1px solid #ccc; }\n");
+    fprintf(archivo, ".vacio { background-color: white; }\n");
+    fprintf(archivo, ".despegue { background-color: green; }\n");
+    fprintf(archivo, ".aterrizaje { background-color: blue; }\n");
+    fprintf(archivo, ".granada { background-color: orange; }\n");
+    fprintf(archivo, ".kamikaze { background-color: red; }\n");
+    fprintf(archivo, "</style>\n");
+    fprintf(archivo, "</head>\n");
+    fprintf(archivo, "<body>\n");
+    fprintf(archivo, "<table border=\"1\">\n");
+
+    for(int y = 0; y < 200; y++){
+        fprintf(archivo, "<tr>\n");
+        for(int x = 0 ; x < 200;x++){
+
+
+            if (memoria[y][x].despegue)
+                clase = "despegue";
+            else if (memoria[y][x].aterrizaje)
+                clase = "aterrizaje";
+            else if (memoria[y][x].soltarGranada1 || memoria[y][x].soltarGranada2)
+                clase = "granada";
+            else if (memoria[y][x].ataqueKamikaze)
+                clase = "kamikaze";
+            else
+                clase = "vacio";
+
+            fprintf(archivo, "<td class=\"%s\"></td>\n", clase);
+        }
+        fprintf(archivo, "</tr>\n");
+    }
+
+
+    fprintf(archivo, "</table>\n");
+    fprintf(archivo, "</body>\n");
+    fprintf(archivo, "</html>\n");
+    fclose(archivo);
+
 }
 

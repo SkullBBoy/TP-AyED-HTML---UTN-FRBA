@@ -617,6 +617,7 @@ void corregirRegistroArchivo(){
 
     fclose(f1);
     system("pause");
+    return;
 }
 
 void corregirRegistroMemoria(Orden memoria[200][200]){
@@ -644,14 +645,28 @@ void guardarMemoriaArchivoNuevo(Orden memoria[200][200]){
 
     f1=fopen(ruta,"w");
 
-    for(int i;i <200;i++){
-        for(int j;j <200;j++){
-            //aca depende mucho de que te pida pero al final pasa algo como
-            fwrite(&registroAtaque, sizeof(OrdenArchivo), 1, f1);
-        }
-    }
-    // en este 2 opciones, o un ataque se guarda que es complejo o solo matriz que es facil
+    for(int y=0; y<200;y++){
 
+        for(int x=0; x<200; x++){
+            if((memoria[x][y].siguientex!=0 && memoria[x][y].siguientey!=0) ||
+            (memoria[x][y].ataqueKamikaze==false || memoria[x][y].aterrizaje==false)){
+                registroAtaque.x = x;
+                registroAtaque.y = y;
+                registroAtaque.siguientex = memoria[x][y].siguientex;
+                registroAtaque.siguientey = memoria[x][y].siguientey;
+                registroAtaque.ataqueKamikaze = memoria[x][y].ataqueKamikaze;
+                registroAtaque.aterrizaje = memoria[x][y].aterrizaje;
+                registroAtaque.despegue = memoria[x][y].despegue;
+                registroAtaque.espera = memoria[x][y].espera;
+                registroAtaque.soltarGranada1 = memoria[x][y].soltarGranada1;
+                registroAtaque.soltarGranada2 = memoria[x][y].soltarGranada2;
+
+                fwrite(&registroAtaque, sizeof(OrdenArchivo), 1, f1);
+            }
+        }
+
+    }
+    fclose(f1);
     return;
 }
 

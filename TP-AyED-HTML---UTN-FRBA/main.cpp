@@ -526,7 +526,6 @@ void corregirRegistroArchivo(){
 
     int x, y;
     bool encontrado=false;
-    bool registroValido=true;
 
     cout<<"ingrese ruta en la que esta el archivo a corregir"<<endl;
     cin>>ruta;
@@ -635,7 +634,82 @@ void corregirRegistroArchivo(){
 }
 
 void corregirRegistroMemoria(Orden memoria[200][200]){
+    char opcion;
+    char corregirOtro='s';
+    int x, y;
+    while(corregirOtro=='s' || corregirOtro=='S'){
+        cout <<"indique las coordenadas del registro que quiere modificar"<< endl;
+        cout << "x:";
+        cin >> x;
+        cout << "y:";
+        cin >> y;
 
+        if (memoria[x][y].siguientex==0 && memoria[x][y].siguientey==0 && memoria[x][y].ataqueKamikaze==0 && memoria[x][y].aterrizaje==0 && memoria[x][y].despegue==0 && memoria[x][y].soltarGranada1==0 && memoria[x][y].soltarGranada2==0 && memoria[x][y].espera==0){
+            cout <<"las cordenadas que se eligieron no tienen nada registrado para corregir"<< endl;
+        }else if (x<0 || x>199 || y<0 || y>199){
+            cout <<"las coordenadas ingresadas no son validas"<< endl;
+        }else {
+            cout<<"registro actual:"<<endl<<endl;
+
+            cout<<endl;
+            cout<<"espera: "<<memoria[x][y].espera<<endl;
+
+            cout<<endl<<"granadas:"<<endl;
+            cout<<"granada 1: "<<memoria[x][y].soltarGranada1<<endl;
+            cout<<"granada 2: "<<memoria[x][y].soltarGranada2<<endl;
+
+            cout<<endl;
+            cout<<"ataque kamikaze: "<<memoria[x][y].ataqueKamikaze<<endl;
+            cout<<"aterrizaje: "<<memoria[x][y].aterrizaje<<endl;
+            cout<<"despegue: "<<memoria[x][y].despegue<<endl;
+
+            cout<<endl<<"siguientes coordenadas:"<<endl;
+            cout<<"x: "<<memoria[x][y].siguientex<<endl;
+            cout<<"y: "<<memoria[x][y].siguientey<<endl;
+
+            cout<<endl<<"quiere corregir este registro? s/S n/N"<<endl;
+            cin>>opcion;
+
+            if(opcion=='s' || opcion=='S'){
+                system("cls");
+                cout<<"ingrese los nuevos datos (X: "<<x<<" Y: "<<y<<")"<<endl<<endl;
+
+                cout<<"espera: ";
+                cin>>memoria[x][y].espera;
+
+                cout<<endl;
+                cout<<"(0= no, 1= si)"<<endl<<endl;
+                cout<<"granadas: "<<endl;
+                cout<<"granada 1: ";
+                cin>>memoria[x][y].soltarGranada1;
+                cout<<"granada 2: ";
+                cin>>memoria[x][y].soltarGranada2;
+
+                cout<<endl;
+                cout<<"ataque kamikaze: ";
+                cin>>memoria[x][y].ataqueKamikaze;
+                cout<<"aterrizaje: ";
+                cin>>memoria[x][y].aterrizaje;
+                cout<<"despegue: ";
+                cin>>memoria[x][y].despegue;
+
+                cout<<endl<<"siguientes coordenadas:"<<endl;
+                cout<<"x: ";
+                cin>>memoria[x][y].siguientex;
+                cout<<"y: ";
+                cin>>memoria[x][y].siguientey;
+
+                system("cls");
+            }if (opcion=='n' || opcion=='N'){
+
+                cout<<"no se va a modificar el archivo"<<endl;
+            }
+
+        cout <<"quiere corregir otro registro? s/S n/N"<<endl;
+        cin >> corregirOtro;
+        }
+    }
+system("pause");
 }
 
 void guardarMemoriaArchivoNuevo(Orden memoria[200][200]){
@@ -657,7 +731,7 @@ void guardarMemoriaArchivoNuevo(Orden memoria[200][200]){
 
     strcat(ruta, nombre);
 
-    f1=fopen(ruta,"w");
+    f1=fopen(ruta,"wb");
 
     for(int y=0; y<200;y++){
 
@@ -714,6 +788,8 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
     fprintf(archivo, ".aterrizaje { background-color: blue; }\n");
     fprintf(archivo, ".granada { background-color: orange; }\n");
     fprintf(archivo, ".kamikaze { background-color: red; }\n");
+    fprintf(archivo, ".moverse { background-color: cyan; }\n");
+    fprintf(archivo, ".esperar { background-color: yellow; }\n");
     fprintf(archivo, ".caja-texto  { border: 2px solid #333; padding: 10px; border-radius: 8px; max-width: 150px;  }\n");
 
     fprintf(archivo, "</style>\n");
@@ -742,6 +818,14 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
     fprintf(archivo, "Color de kamikaze\n");
     fprintf(archivo, "</div>\n");
 
+    fprintf(archivo, "<div class=\"caja-texto moverse\">\n");
+    fprintf(archivo, "Color de moverse\n");
+    fprintf(archivo, "</div>\n");
+
+    fprintf(archivo, "<div class=\"caja-texto esperar\">\n");
+    fprintf(archivo, "Color de esperar\n");
+    fprintf(archivo, "</div>\n");
+
     fprintf(archivo, "<table border=\"1\">\n");
 
     for(int y = 0; y < 200; y++){
@@ -757,6 +841,25 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
                 clase = "granada";
             else if (memoria[y][x].ataqueKamikaze)
                 clase = "kamikaze";
+            else if (memoria[y][x].espera > 0)
+                clase = "esperar";
+            else if ((!memoria[y][x].ataqueKamikaze &&
+                     !memoria[y][x].soltarGranada1 &&
+                     !memoria[y][x].soltarGranada2 &&
+                     !memoria[y][x].aterrizaje &&
+                     !memoria[y][x].aterrizaje &&
+                     !memoria[y][x].despegue) &&
+                     (memoria[y][x].siguientex != 0   &&
+                     memoria[y][x].siguientey != 0)
+                     )
+                clase = "moverse";
+            else if (
+                     (x == 0   &&
+                     memoria[y][x].siguientey != 0) ||
+                     (y == 0   &&
+                     memoria[y][x].siguientex != 0)
+                     )
+                clase = "moverse";
             else
                 clase = "vacio";
 

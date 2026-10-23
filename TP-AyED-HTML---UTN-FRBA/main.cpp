@@ -69,13 +69,14 @@ int main(){
         case 1:
             system("cls");
             cargarArchivoAtaqueMemoria(memoriaDron);
-
+            system("pause");
 
         break;
 
         case 2:
             system("cls");
             mostrarAtaqueCargado(memoriaDron);
+            system("pause");
 
 
         break;
@@ -83,20 +84,21 @@ int main(){
         case 3:
             system("cls");
             crearArchivoAtaqueNuevo();
-
+            system("pause");
 
         break;
 
         case 4:
             system("cls");
             corregirRegistroArchivo();
-
+            system("pause");
 
         break;
 
         case 5:
             system("cls");
             corregirRegistroMemoria(memoriaDron);
+            system("pause");
 
 
         break;
@@ -104,6 +106,7 @@ int main(){
         case 6:
             system("cls");
             guardarMemoriaArchivoNuevo(memoriaDron);
+            system("pause");
 
 
         break;
@@ -111,6 +114,7 @@ int main(){
         case 7:
             system("cls");
             visualizarArchivoAtaqueHTML(memoriaDron);
+            system("pause");
 
 
         break;
@@ -172,6 +176,12 @@ void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
     if(f1!=NULL){
 
       while(fread(&registroTemp, sizeof(OrdenArchivo), 1, f1)){
+
+            if(registroTemp.x < 0 || registroTemp.x > 199 || registroTemp.y < 0 || registroTemp.y > 199){
+               archivoInvalido = true;
+               cout << "Error: Coordenadas principales fuera del mapa 200x200." << endl;
+               break;
+             }
 
 
 
@@ -252,26 +262,39 @@ void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
 
             }else{
 
-              Xanterior=registroTemp.x;
-              YAnterior=registroTemp.y;
+              Xanterior=registroTemp.siguientex;
+              YAnterior=registroTemp.siguientey;
             }
 
 
       }
 
-      if (registroTemp.siguientex<registroTemp.x-1 ||  registroTemp.siguientex>registroTemp.x+1){
-            archivoInvalido=true;
-            cout << "error, hubo un hueco al escribir las posiciones x" << endl;
-            break;
-      }
+      if (!registroTemp.aterrizaje && !registroTemp.ataqueKamikaze) {
+            if (registroTemp.siguientex<registroTemp.x-1 ||  registroTemp.siguientex>registroTemp.x+1){
+                  archivoInvalido=true;
+                  cout << "error, hubo un hueco al escribir las posiciones x" << endl;
+                  break;
+            }
 
-      if (registroTemp.siguientey<registroTemp.y-1 || registroTemp.siguientey>registroTemp.y+1){
-            archivoInvalido=true;
-            cout << "error, hubo un hueco al escribir las posiciones y" << endl;
-            break;
+            if (registroTemp.siguientey<registroTemp.y-1 || registroTemp.siguientey>registroTemp.y+1){
+                  archivoInvalido=true;
+                  cout << "error, hubo un hueco al escribir las posiciones y" << endl;
+                  break;
+            }
       }
 
       }//------------- FIN WHILE VALIDACIONES-----------------------------------------------------------------
+
+      if(archivoInvalido == false){
+          if(despegueCont == 0){
+              archivoInvalido = true;
+              cout << "error: el archivo no tiene instruccion de despegue" << endl;
+          }
+          if(aterrizajeOKamikazeHecho == false){
+              archivoInvalido=true;
+              cout << "error: la mision termina sin aterrizaje ni ataque kamikaze" << endl;
+          }
+      }
 
 
       if(archivoInvalido==true){
@@ -310,6 +333,8 @@ void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
 
         }
 
+        cout<<"Ataque cargado: "<<nombre<<endl<<endl<<"correctamente en la memoria"<<endl<<endl;
+
 
 
       }
@@ -318,7 +343,7 @@ void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
 
 
 
-
+        fclose(f1);
     }else{
         cout<<"Error con el archivo"<<endl;
     }
@@ -332,21 +357,24 @@ void mostrarAtaqueCargado(Orden memoria[200][200]){
     int datos_por_pagina = 10;
     char opcion;
 
+    //calculo columna
+    columna = ((pagina-1)*datos_por_pagina)/200;
+
+    //calculo fila
+
+    fila = (pagina-1)*datos_por_pagina - (columna*200);
+
     do{
-        //calculo columna
 
-        columna = ((pagina-1)*datos_por_pagina)/200;
-
-        //calculo fila
-
-        fila = (pagina-1)*datos_por_pagina - (columna*200);
-
-        //mostrar datos
+        pagina = fila + columna * datos_por_pagina;
 
         for(int i = 0;i < datos_por_pagina;i++){
             if((fila + i) >= 200){
                 columna++;
                 fila -= 200;
+            }
+            if(columna >199){
+                continue;
             }
             auxAtaque = &memoria[fila + i ][columna];
 
@@ -358,6 +386,7 @@ void mostrarAtaqueCargado(Orden memoria[200][200]){
                 cout << "Y: "<< columna<<endl;
 
                 cout<<"Sin datos"<<endl;
+                cout << "-------------------"<<endl;
                 continue;
             }
             else{
@@ -374,35 +403,37 @@ void mostrarAtaqueCargado(Orden memoria[200][200]){
                 cout<<"Granada 2: "<< auxAtaque->soltarGranada2<<endl;
 
                 cout<<"Ataque kamikaze: "<< auxAtaque->ataqueKamikaze<<endl;
-                cout<<"Aterrizaje: " << auxAtaque->despegue<<endl;
+                cout<<"Aterrizaje: " << auxAtaque->aterrizaje<<endl;
                 cout<<"Despegue: " << auxAtaque->despegue<<endl;
 
 
                 cout<<endl<<"Siguientes coordenadas:"<<endl;
                 cout << "X: " << auxAtaque->siguientex<<endl;
                 cout << "Y: " << auxAtaque->siguientey<<endl;
-
+                 cout << "-------------------"<<endl;
             }
 
         }
         cout<<"Pagina " << pagina<<endl;
-        cout<<"Siguiente pagina con s/S, anterior con a/A "<<endl;
-        cout<<"Si quiere terminar ingrese n/N"<<endl;
-        cin>>opcion;
-        if(opcion == 's' || opcion == 'S'){
-            pagina++;
-        }
-        else if(opcion == 'a' || opcion == 'A'){
-            pagina--;
-        }
+        cout<<"Si quiere terminar ingrese 201"<<endl;
+        cout<<"Ingrese posicion x"<<endl;
+
+        cin>>fila;
+        cout<<"Ingrese posicion y"<<endl;
+        cin>>columna;
+
         system("cls");
-        if (pagina <= 0 || pagina*datos_por_pagina >=40000){
-            cout<<"Limite exedido, volviendo a menu"<<endl;
-            // Use IA chatgpt, simplemnete elimina buffer y espera enter
+        if(fila == 201 || columna == 201){
+            cout<<"Volviendo a menu"<<endl;
             system("pause");
             return;
         }
-    }while(opcion!='n' && opcion!='N' );
+        if (fila < 0 || fila > 200 || columna < 0 || columna > 200){
+            cout<<"Limite exedido, volviendo a menu"<<endl;
+            system("pause");
+            return;
+        }
+    }while(true );
 
 
 
@@ -453,7 +484,7 @@ void crearArchivoAtaqueNuevo(){
 
             cout<<endl;
             cout<<"Ataque kamikaze: "; cin>>registroAtaque.ataqueKamikaze;
-            cout<<"Aterrizaje: ";cin>>registroAtaque.despegue;
+            cout<<"Aterrizaje: ";cin>>registroAtaque.aterrizaje;
             cout<<"Despegue: ";cin>>registroAtaque.despegue;
 
 
@@ -489,130 +520,113 @@ void corregirRegistroArchivo(){
     char nombre[150];
     FILE *f1;
     char opcion;
+    char corregirOtro='s';
 
-    OrdenArchivo registroActual;
-    OrdenArchivo registroNuevo;
+    OrdenArchivo registro;
 
     int x, y;
     bool encontrado=false;
     bool registroValido=true;
 
-    // Limpiamos el salto de línea residual dejado por cin >> opcion en el menu principal
-    cin.ignore();
+    cout<<"ingrese ruta en la que esta el archivo a corregir"<<endl;
+    cin>>ruta;
 
-    cout<<"Ingrese ruta en la que esta el archivo a corregir"<<endl;
-    cin.getline(ruta, 150);
-
-    cout<<"Ingrese nombre del archivo"<<endl;
-    cin.getline(nombre, 150);
+    cout<<"ingrese nombre del archivo"<<endl;
+    cin>> nombre;
     system("cls");
 
     strcat(ruta, nombre);
 
-    // "r+b": lectura y escritura sobre un archivo binario que ya existe
     f1=fopen(ruta,"r+b");
 
     if(f1==NULL){
-        cout<<"Error con el archivo"<<endl;
+        cout<<"error con el archivo"<<endl;
         system("pause");
         return;
     }
 
-    cout<<"Coordenadas del registro a corregir"<<endl;
-    cout<<"X: ";cin>>x;
-    cout<<"Y: ";cin>>y;
-    system("cls");
 
-    // busqueda secuencial: al salir con encontrado==true, la posicion del archivo
-    // queda justo despues del registro buscado
-    while(!encontrado && fread(&registroActual, sizeof(OrdenArchivo), 1, f1)){
-        if(registroActual.x==x && registroActual.y==y){
-            encontrado=true;
-        }
-    }
+    while(corregirOtro=='s' || corregirOtro=='S'){
 
-    if(!encontrado){
-        cout<<"No existe un registro en las coordenadas X: "<<x<<" Y: "<<y<<endl;
-    }else{
-        cout<<"Registro actual:"<<endl<<endl;
-        cout<<"Coordenadas: "<<endl;
-        cout<<"X: "<<registroActual.x<<endl;
-        cout<<"Y: "<<registroActual.y<<endl;
+            cout<<"indique coordenadas del registro a corregir"<<endl;
 
-        cout<<endl;
-        cout<<"Espera (segundos): "<<registroActual.espera<<endl;
-
-        cout<<endl<<"Explosivos:"<<endl;
-        cout<<"Granada 1: "<<registroActual.soltarGranada1<<endl;
-        cout<<"Granada 2: "<<registroActual.soltarGranada2<<endl;
-
-        cout<<endl;
-        cout<<"Ataque kamikaze: "<<registroActual.ataqueKamikaze<<endl;
-        cout<<"Aterrizaje: "<<registroActual.aterrizaje<<endl;
-        cout<<"Despegue: "<<registroActual.despegue<<endl;
-
-        cout<<endl<<"Siguientes coordenadas:"<<endl;
-        cout<<"X: "<<registroActual.siguientex<<endl;
-        cout<<"Y: "<<registroActual.siguientey<<endl;
-
-        cout<<endl<<"Desea corregir este registro? s/S n/N"<<endl;
-        cin>>opcion;
-
-        if(opcion=='s' || opcion=='S'){
-            system("cls");
-            cout<<"Ingrese los nuevos datos (X: "<<x<<" Y: "<<y<<")"<<endl<<endl;
-
-            // x e y son la "clave" del registro original en la matriz, se mantienen
-            registroNuevo.x=x;
-            registroNuevo.y=y;
-
-            cout<<"Espera (segundos): ";cin>>registroNuevo.espera;
-
-            cout<<endl;
-            cout<<"(0= no, 1= si)"<<endl<<endl;
-            cout<<"Explosivos: "<<endl;
-            cout<<"Granada 1: ";cin>>registroNuevo.soltarGranada1;
-            cout<<"Granada 2: ";cin>>registroNuevo.soltarGranada2;
-
-            cout<<endl;
-            cout<<"Ataque kamikaze: ";cin>>registroNuevo.ataqueKamikaze;
-            cout<<"Aterrizaje: ";cin>>registroNuevo.aterrizaje;
-            cout<<"Despegue: ";cin>>registroNuevo.despegue;
-
-            cout<<endl<<"Siguientes coordenadas:"<<endl;
-            cout<<"X: ";cin>>registroNuevo.siguientex;
-            cout<<"Y: ";cin>>registroNuevo.siguientey;
+            cout<<"x: ";
+            cin>>x;
+            cout<<"y: ";
+            cin>>y;
 
             system("cls");
 
-            // validaciones que se pueden hacer sobre un solo registro
-            if(registroNuevo.despegue && (registroNuevo.soltarGranada1 || registroNuevo.soltarGranada2 || registroNuevo.ataqueKamikaze)){
-                cout<<"Error, el despegue no puede estar acompanado de un ataque"<<endl;
-                registroValido=false;
+            while(!encontrado && fread(&registro, sizeof(OrdenArchivo), 1, f1)){
+                if(registro.x==x && registro.y==y){
+                    encontrado=true;
+                }
             }
 
-            if(registroNuevo.siguientex<0 || registroNuevo.siguientex>199 || registroNuevo.siguientey<0 || registroNuevo.siguientey>199){
-                cout<<"Error, las siguientes coordenadas estan fuera de la tabla (0 a 199)"<<endl;
-                registroValido=false;
-            }
-
-            if(registroNuevo.siguientex<x-1 || registroNuevo.siguientex>x+1 || registroNuevo.siguientey<y-1 || registroNuevo.siguientey>y+1){
-                cout<<"Error, la siguiente celda no es aledana (hueco en la ruta)"<<endl;
-                registroValido=false;
-            }
-
-            if(registroValido){
-                // se vuelve un registro atras (el fread lo dejo adelante) y se pisa de forma segura
-                fseek(f1, -1L * sizeof(OrdenArchivo), SEEK_CUR);
-                fwrite(&registroNuevo, sizeof(OrdenArchivo), 1, f1);
-
-                cout<<"Registro corregido correctamente"<<endl;
+            if(!encontrado){
+                cout<<"no existe un registro en las coordenadas x: "<<x<<" y: "<<y<<endl;
             }else{
-                cout<<"No se modifico el archivo debido a los errores de validacion"<<endl;
+                cout<<"registro actual:"<<endl<<endl;
+                cout<<"coordenadas: "<<endl;
+                cout<<"x: "<<registro.x<<endl;
+                cout<<"y: "<<registro.y<<endl;
+
+                cout<<endl;
+                cout<<"espera: "<<registro.espera<<endl;
+
+                cout<<endl<<"granadas:"<<endl;
+                cout<<"granada 1: "<<registro.soltarGranada1<<endl;
+                cout<<"granada 2: "<<registro.soltarGranada2<<endl;
+
+                cout<<endl;
+                cout<<"ataque kamikaze: "<<registro.ataqueKamikaze<<endl;
+                cout<<"aterrizaje: "<<registro.aterrizaje<<endl;
+                cout<<"despegue: "<<registro.despegue<<endl;
+
+                cout<<endl<<"siguientes coordenadas:"<<endl;
+                cout<<"x: "<<registro.siguientex<<endl;
+                cout<<"y: "<<registro.siguientey<<endl;
+
+                cout<<endl<<"quiere corregir este registro? s/S n/N"<<endl;
+                cin>>opcion;
+
+                if(opcion=='s' || opcion=='S'){
+                    system("cls");
+                    cout<<"ingrese los nuevos datos (X: "<<x<<" Y: "<<y<<")"<<endl<<endl;
+
+                    cout<<"espera: ";
+                    cin>>registro.espera;
+
+                    cout<<endl;
+                    cout<<"(0= no, 1= si)"<<endl<<endl;
+                    cout<<"granadas: "<<endl;
+                    cout<<"granada 1: ";
+                    cin>>registro.soltarGranada1;
+                    cout<<"granada 2: ";
+                    cin>>registro.soltarGranada2;
+
+                    cout<<endl;
+                    cout<<"ataque kamikaze: ";
+                    cin>>registro.ataqueKamikaze;
+                    cout<<"aterrizaje: ";
+                    cin>>registro.aterrizaje;
+                    cout<<"despegue: ";
+                    cin>>registro.despegue;
+
+                    cout<<endl<<"siguientes coordenadas:"<<endl;
+                    cout<<"x: ";
+                    cin>>registro.siguientex;
+                    cout<<"y: ";
+                    cin>>registro.siguientey;
+
+                    system("cls");
+                }if (opcion=='n' || opcion=='N'){
+
+                    cout<<"no se va a modificar el archivo"<<endl;
+                }
+                cout <<"quiere corregir otro registro? s/S n/N"<<endl;
+                cin >> corregirOtro;
             }
-        }else{
-            cout<<"No se modifico el archivo"<<endl;
-        }
     }
 
     fclose(f1);
@@ -686,10 +700,13 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
 
 
     fprintf(archivo, "<html>\n");
+
     fprintf(archivo, "<head>\n");
+
     fprintf(archivo, "<title>Ataque del dron</title>\n");
 
     fprintf(archivo, "<style>\n");
+
     fprintf(archivo, "table { border-collapse: collapse; }\n");
     fprintf(archivo, "td { width: 20px; height: 20px; border: 1px solid #ccc; }\n");
     fprintf(archivo, ".vacio { background-color: white; }\n");
@@ -697,9 +714,34 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
     fprintf(archivo, ".aterrizaje { background-color: blue; }\n");
     fprintf(archivo, ".granada { background-color: orange; }\n");
     fprintf(archivo, ".kamikaze { background-color: red; }\n");
+    fprintf(archivo, ".caja-texto  { border: 2px solid #333; padding: 10px; border-radius: 8px; max-width: 150px;  }\n");
+
     fprintf(archivo, "</style>\n");
+
     fprintf(archivo, "</head>\n");
+
     fprintf(archivo, "<body>\n");
+
+    fprintf(archivo, "<div class=\"caja-texto vacio\">\n");
+    fprintf(archivo, "Color de vacio\n");
+    fprintf(archivo, "</div>\n");
+
+    fprintf(archivo, "<div class=\"caja-texto despegue\">\n");
+    fprintf(archivo, "Color de despegue\n");
+    fprintf(archivo, "</div>\n");
+
+    fprintf(archivo, "<div class=\"caja-texto aterrizaje\">\n");
+    fprintf(archivo, "Color de aterrizaje\n");
+    fprintf(archivo, "</div>\n");
+
+    fprintf(archivo, "<div class=\"caja-texto granada\">\n");
+    fprintf(archivo, "Color de granada\n");
+    fprintf(archivo, "</div>\n");
+
+    fprintf(archivo, "<div class=\"caja-texto kamikaze\">\n");
+    fprintf(archivo, "Color de kamikaze\n");
+    fprintf(archivo, "</div>\n");
+
     fprintf(archivo, "<table border=\"1\">\n");
 
     for(int y = 0; y < 200; y++){

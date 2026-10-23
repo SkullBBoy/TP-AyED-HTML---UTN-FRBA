@@ -154,3 +154,102 @@ soltarGranada1: 0
 soltarGranada2: 0
 siguientex: 0
 siguientey: 0
+
+----------------------------------------
+
+ATAQUE 6 (Valido - Ruta Larga y Movimiento Puro)
+Registro 1
+x: 50
+y: 50
+espera: 0
+despegue: 1
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 51
+siguientey: 50
+
+Registro 2
+x: 51
+y: 50
+espera: 0
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 1
+soltarGranada2: 0
+siguientex: 51
+siguientey: 51
+
+Registro 3
+x: 51
+y: 51
+espera: 3
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 52
+siguientey: 51
+
+Registro 4
+x: 52
+y: 51
+espera: 0
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 1
+siguientex: 52
+siguientey: 52
+
+Registro 5
+x: 52
+y: 52
+espera: 2
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 53
+siguientey: 52
+
+Registro 6
+x: 53
+y: 52
+espera: 0
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 54
+siguientey: 52
+
+Registro 7
+x: 54
+y: 52
+espera: 0
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 54
+siguientey: 53
+
+Registro 8
+x: 54
+y: 53
+espera: 0
+despegue: 0
+aterrizaje: 1
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 0
+siguientey: 0

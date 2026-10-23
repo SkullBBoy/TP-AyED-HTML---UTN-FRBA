@@ -1,0 +1,156 @@
+ATAQUE 1 (Valido)
+Registro 1
+x: 10
+y: 10
+espera: 0
+despegue: 1
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 10
+siguientey: 11
+
+Registro 2
+x: 10
+y: 11
+espera: 0
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 1
+soltarGranada2: 0
+siguientex: 10
+siguientey: 12
+
+Registro 3
+x: 10
+y: 12
+espera: 0
+despegue: 0
+aterrizaje: 1
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 0
+siguientey: 0
+
+----------------------------------------
+
+ATAQUE 2 (Invalido - Colision)
+Registro 1
+x: 5
+y: 5
+espera: 0
+despegue: 1
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 5
+siguientey: 6
+
+Registro 2
+x: 5
+y: 6
+espera: 0
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 5
+siguientey: 5
+
+Registro 3
+x: 5
+y: 5
+espera: 0
+despegue: 0
+aterrizaje: 1
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 0
+siguientey: 0
+
+----------------------------------------
+
+ATAQUE 3 (Invalido - Hueco)
+Registro 1
+x: 20
+y: 20
+espera: 0
+despegue: 1
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 20
+siguientey: 21
+
+Registro 2
+x: 25
+y: 25
+espera: 0
+despegue: 0
+aterrizaje: 1
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 0
+siguientey: 0
+
+----------------------------------------
+
+ATAQUE 4 (Invalido - Despegue Sucio)
+Registro 1
+x: 2
+y: 2
+espera: 0
+despegue: 1
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 1
+soltarGranada2: 1
+siguientex: 2
+siguientey: 3
+
+----------------------------------------
+
+ATAQUE 5 (Valido - Kamikaze y Espera)
+Registro 1
+x: 30
+y: 30
+espera: 0
+despegue: 1
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 31
+siguientey: 30
+
+Registro 2
+x: 31
+y: 30
+espera: 5
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 0
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 32
+siguientey: 30
+
+Registro 3
+x: 32
+y: 30
+espera: 0
+despegue: 0
+aterrizaje: 0
+ataqueKamikaze: 1
+soltarGranada1: 0
+soltarGranada2: 0
+siguientex: 0
+siguientey: 0

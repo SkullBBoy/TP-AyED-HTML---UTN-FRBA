@@ -765,6 +765,8 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
     char* nombreArchivo = "index.html";
     archivo = fopen(nombreArchivo, "w");
     const char* clase = "vacio";
+    int n;
+
 
     if (archivo == NULL)
     {
@@ -782,23 +784,27 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
     fprintf(archivo, "<style>\n");
 
     fprintf(archivo, "table { border-collapse: collapse; }\n");
-    fprintf(archivo, "td { width: 20px; height: 20px; border: 1px solid #ccc; }\n");
-    fprintf(archivo, ".vacio { background-color: white; }\n");
-    fprintf(archivo, ".despegue { background-color: green; }\n");
-    fprintf(archivo, ".aterrizaje { background-color: blue; }\n");
-    fprintf(archivo, ".granada { background-color: orange; }\n");
-    fprintf(archivo, ".kamikaze { background-color: red; }\n");
-    fprintf(archivo, ".moverse { background-color: cyan; }\n");
-    fprintf(archivo, ".esperar { background-color: yellow; }\n");
-    fprintf(archivo, ".caja-texto  { border: 2px solid #333; padding: 10px; border-radius: 8px; max-width: 150px;  }\n");
+    fprintf(archivo, "td { width: 20px; height: 20px; border: 1px solid #ccc;  style= \"color: white; \" }\n");
+    fprintf(archivo, ".vacio { background-color:#334155; }\n");
+    fprintf(archivo, ".despegue { background-color: #10B981; }\n");
+    fprintf(archivo, ".aterrizaje { background-color: #EC4899; }\n");
+    fprintf(archivo, ".granada { background-color: #64748B; }\n");
+    fprintf(archivo, ".kamikaze { background-color: #EF4444; }\n");
+    fprintf(archivo, ".moverse { background-color: #38BDF8; }\n");
+    fprintf(archivo, ".esperar { background-color: #F59E0B; }\n");
+    fprintf(archivo, ".caja-texto  { border: 1px solid #333; padding: 10px; border-radius: 8px; max-width: 125px;color: white; }\n");
 
     fprintf(archivo, "</style>\n");
 
     fprintf(archivo, "</head>\n");
 
-    fprintf(archivo, "<body>\n");
+    fprintf(archivo, "<body style= \"background-color: #0F172A; \">\n");
+    fprintf(archivo, "<h1 style= \"color: white; \">UTN FRBA - Algoritmos y Estructuras de datos</h1>\n");
+    fprintf(archivo, "<h1 style= \"color: white; \">Trabajo práctico grupal</h1>\n");
+    fprintf(archivo, "<p style= \"color: white; \">         El ataque es representado con los códigos de colores de cada acción, abajo se ve cada uno de los mismos.  </p>\n");
 
     fprintf(archivo, "<div class=\"caja-texto vacio\">\n");
+
     fprintf(archivo, "Color de vacio\n");
     fprintf(archivo, "</div>\n");
 
@@ -827,9 +833,16 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
     fprintf(archivo, "</div>\n");
 
     fprintf(archivo, "<table border=\"1\">\n");
-
+    fprintf(archivo, "<tr>\n");
+    fprintf(archivo, "<td class=\"%s\"></td>\n", clase);
+    for(int i = 1; i <201;i++){
+        fprintf(archivo, "<td class=\"%s\"style= \"color: white; \">%d</td>\n", clase,i);
+    }
+    fprintf(archivo, "</tr>\n");
     for(int y = 0; y < 200; y++){
         fprintf(archivo, "<tr>\n");
+        clase = "vacio";
+        fprintf(archivo, "<td class=\"%s\" style= \"color: white; \">%d </td>\n", clase,y+1);
         for(int x = 0 ; x < 200;x++){
 
 
@@ -869,6 +882,61 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
     }
 
 
+    fprintf(archivo, "</table>\n");
+    fprintf(archivo, "<p style= \"color: white; \">         Lista de lo que hizo el dorn</p>\n");
+    fprintf(archivo, "<table border=\"1\">\n");
+    fprintf(archivo, "<tr>\n");
+    fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">Coordenada x</td>\n");
+    fprintf(archivo, "<td class=\"vacio\"style= \"color: white; \">Coordenada y</td>\n");
+    fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">Clase de movimiento</td>\n");
+    fprintf(archivo, "</tr>\n");
+
+     for(int y = 0; y < 200; y++){
+
+        for(int x = 0 ; x < 200;x++){
+
+
+            if (memoria[y][x].despegue)
+                clase = "despegue";
+            else if (memoria[y][x].aterrizaje)
+                clase = "aterrizaje";
+            else if (memoria[y][x].soltarGranada1 || memoria[y][x].soltarGranada2)
+                clase = "granada";
+            else if (memoria[y][x].ataqueKamikaze)
+                clase = "kamikaze";
+            else if (memoria[y][x].espera > 0)
+                clase = "esperar";
+            else if ((!memoria[y][x].ataqueKamikaze &&
+                     !memoria[y][x].soltarGranada1 &&
+                     !memoria[y][x].soltarGranada2 &&
+                     !memoria[y][x].aterrizaje &&
+                     !memoria[y][x].aterrizaje &&
+                     !memoria[y][x].despegue) &&
+                     (memoria[y][x].siguientex != 0   &&
+                     memoria[y][x].siguientey != 0)
+                     )
+                clase = "moverse";
+            else if (
+                     (x == 0   &&
+                     memoria[y][x].siguientey != 0) ||
+                     (y == 0   &&
+                     memoria[y][x].siguientex != 0)
+                     )
+                clase = "moverse";
+            else
+                clase = "vacio";
+            if(strcmp("vacio", clase) != 0){
+                fprintf(archivo, "<tr>\n", clase);
+                fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">%d</tr>\n", x);
+                fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">%d</tr>\n", y);
+                fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">%s</tr>\n", clase);
+                fprintf(archivo, "<tr>", clase);
+
+            }
+
+
+        }
+    }
     fprintf(archivo, "</table>\n");
     fprintf(archivo, "</body>\n");
     fprintf(archivo, "</html>\n");

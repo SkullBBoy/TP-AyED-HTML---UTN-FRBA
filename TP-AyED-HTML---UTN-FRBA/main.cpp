@@ -256,6 +256,7 @@ void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
 
             if(Xanterior!=registroTemp.x || YAnterior!=registroTemp.y){
 
+
             cout<<"Error, coordenadas no contiguas"<<endl;
             archivoInvalido=true;
             break;
@@ -316,7 +317,6 @@ void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
             }
 
         }
-
         fseek(f1, 0, SEEK_SET);
 
         while(fread(&registroTemp, sizeof(OrdenArchivo), 1, f1)){
@@ -329,19 +329,10 @@ void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
             memoria[registroTemp.x][registroTemp.y].despegue=registroTemp.despegue;
             memoria[registroTemp.x][registroTemp.y].siguientex=registroTemp.siguientex;
             memoria[registroTemp.x][registroTemp.y].siguientey=registroTemp.siguientey;
-
-
         }
 
         cout<<"Ataque cargado: "<<nombre<<endl<<endl<<"correctamente en la memoria"<<endl<<endl;
-
-
-
       }
-
-
-
-
 
         fclose(f1);
     }else{
@@ -357,11 +348,7 @@ void mostrarAtaqueCargado(Orden memoria[200][200]){
     int datos_por_pagina = 10;
     char opcion;
 
-    //calculo columna
     columna = ((pagina-1)*datos_por_pagina)/200;
-
-    //calculo fila
-
     fila = (pagina-1)*datos_por_pagina - (columna*200);
 
     do{
@@ -591,7 +578,13 @@ void corregirRegistroArchivo(){
 
                 if(opcion=='s' || opcion=='S'){
                     system("cls");
-                    cout<<"ingrese los nuevos datos (X: "<<x<<" Y: "<<y<<")"<<endl<<endl;
+                    cout<<"ingrese los nuevos datos"<<endl<<endl;
+
+                    cout<<"x: ";
+                    cin>>registro.x;
+                    cout<<"y: ";
+                    cin>>registro.y;
+                    cout<< endl;
 
                     cout<<"espera: ";
                     cin>>registro.espera;
@@ -672,7 +665,7 @@ void corregirRegistroMemoria(Orden memoria[200][200]){
 
             if(opcion=='s' || opcion=='S'){
                 system("cls");
-                cout<<"ingrese los nuevos datos (X: "<<x<<" Y: "<<y<<")"<<endl<<endl;
+                cout<<"ingrese los nuevos datos"<<endl<<endl;
 
                 cout<<"espera: ";
                 cin>>memoria[x][y].espera;
@@ -717,50 +710,84 @@ void guardarMemoriaArchivoNuevo(Orden memoria[200][200]){
     char ruta[150];
     char nombre[150];
     FILE *f1;
-
+    int sigX = -1, sigY = -1;
+    bool salir = false;
 
     cout<<"Ingrese ruta"<<endl;
     cin>>ruta;
-
     cout<<endl;
 
     cout<<"Ingrese nombre del archivo"<<endl;
     cin>>nombre;
     system("cls");
 
-
     strcat(ruta, nombre);
-
     f1=fopen(ruta,"wb");
 
-    for(int y=0; y<200;y++){
+    if(f1 != NULL){
+        for(int y=0; y<200;y++){
+            for(int x=0; x<200; x++){
+                if(memoria[x][y].despegue == true){
+                    registroAtaque.x=x;
+                    registroAtaque.y=y;
+                    registroAtaque.siguientex=memoria[x][y].siguientex;
+                    registroAtaque.siguientey=memoria[x][y].siguientey;
+                    registroAtaque.ataqueKamikaze=memoria[x][y].ataqueKamikaze;
+                    registroAtaque.aterrizaje=memoria[x][y].aterrizaje;
+                    registroAtaque.despegue=memoria[x][y].despegue;
+                    registroAtaque.espera=memoria[x][y].espera;
+                    registroAtaque.soltarGranada1=memoria[x][y].soltarGranada1;
+                    registroAtaque.soltarGranada2=memoria[x][y].soltarGranada2;
 
-        for(int x=0; x<200; x++){
-            if((memoria[x][y].siguientex!=0 && memoria[x][y].siguientey!=0) ||
-            (memoria[x][y].ataqueKamikaze==false || memoria[x][y].aterrizaje==false)){
-                registroAtaque.x = x;
-                registroAtaque.y = y;
-                registroAtaque.siguientex = memoria[x][y].siguientex;
-                registroAtaque.siguientey = memoria[x][y].siguientey;
-                registroAtaque.ataqueKamikaze = memoria[x][y].ataqueKamikaze;
-                registroAtaque.aterrizaje = memoria[x][y].aterrizaje;
-                registroAtaque.despegue = memoria[x][y].despegue;
-                registroAtaque.espera = memoria[x][y].espera;
-                registroAtaque.soltarGranada1 = memoria[x][y].soltarGranada1;
-                registroAtaque.soltarGranada2 = memoria[x][y].soltarGranada2;
+                    sigX=memoria[x][y].siguientex;
+                    sigY=memoria[x][y].siguientey;
+                    salir=true;
 
-                fwrite(&registroAtaque, sizeof(OrdenArchivo), 1, f1);
+                    fwrite(&registroAtaque, sizeof(OrdenArchivo), 1, f1);
+                }
+                if(salir)break;
             }
+            if(salir)break;
         }
 
+        if(salir == true){
+
+            while(true){
+                registroAtaque.x=sigX;
+                registroAtaque.y=sigY;
+                registroAtaque.siguientex=memoria[sigX][sigY].siguientex;
+                registroAtaque.siguientey=memoria[sigX][sigY].siguientey;
+                registroAtaque.ataqueKamikaze=memoria[sigX][sigY].ataqueKamikaze;
+                registroAtaque.aterrizaje=memoria[sigX][sigY].aterrizaje;
+                registroAtaque.despegue=memoria[sigX][sigY].despegue;
+                registroAtaque.espera=memoria[sigX][sigY].espera;
+                registroAtaque.soltarGranada1=memoria[sigX][sigY].soltarGranada1;
+                registroAtaque.soltarGranada2=memoria[sigX][sigY].soltarGranada2;
+                fwrite(&registroAtaque, sizeof(OrdenArchivo),1,f1);
+
+                if(registroAtaque.ataqueKamikaze==true || registroAtaque.aterrizaje==true){
+                    break;
+                }
+
+                sigX=registroAtaque.siguientex;
+                sigY=registroAtaque.siguientey;
+            }
+            cout << "Archivo guardado exitosamente manteniendo la secuencia" << endl;
+
+        } else {
+            cout << "No hay ningun despegue en memoria para guardar" << endl;
+        }
+
+        fclose(f1);
+    } else {
+        cout << "Error al abrir o crear el archivo." << endl;
     }
-    fclose(f1);
+
     return;
 }
 
 void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
 
-    //Escritura inicial
     FILE *archivo;
     char* nombreArchivo = "index.html";
     archivo = fopen(nombreArchivo, "w");
@@ -927,9 +954,9 @@ void visualizarArchivoAtaqueHTML(Orden memoria[200][200]){
                 clase = "vacio";
             if(strcmp("vacio", clase) != 0){
                 fprintf(archivo, "<tr>\n", clase);
-                fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">%d</tr>\n", x);
-                fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">%d</tr>\n", y);
-                fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">%s</tr>\n", clase);
+                fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">%d</td>\n", x);
+                fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">%d</td>\n", y);
+                fprintf(archivo, "<td class=\"vacio\" style= \"color: white; \">%s</td>\n", clase);
                 fprintf(archivo, "<tr>", clase);
 
             }

@@ -317,6 +317,7 @@ void cargarArchivoAtaqueMemoria(Orden memoria[200][200]){
             }
 
         }
+
         fseek(f1, 0, SEEK_SET);
 
         while(fread(&registroTemp, sizeof(OrdenArchivo), 1, f1)){
@@ -412,12 +413,12 @@ void mostrarAtaqueCargado(Orden memoria[200][200]){
         system("cls");
         if(fila == 201 || columna == 201){
             cout<<"Volviendo a menu"<<endl;
-            system("pause");
+
             return;
         }
         if (fila < 0 || fila > 200 || columna < 0 || columna > 200){
             cout<<"Limite exedido, volviendo a menu"<<endl;
-            system("pause");
+
             return;
         }
     }while(true );
@@ -516,6 +517,7 @@ void corregirRegistroArchivo(){
 
     cout<<"ingrese ruta en la que esta el archivo a corregir"<<endl;
     cin>>ruta;
+    cout<<endl;
 
     cout<<"ingrese nombre del archivo"<<endl;
     cin>> nombre;
@@ -533,6 +535,7 @@ void corregirRegistroArchivo(){
 
 
     while(corregirOtro=='s' || corregirOtro=='S'){
+            fseek(f1,0,SEEK_SET);
 
             cout<<"indique coordenadas del registro a corregir"<<endl;
 
@@ -622,7 +625,7 @@ void corregirRegistroArchivo(){
     }
 
     fclose(f1);
-    system("pause");
+
     return;
 }
 
@@ -702,7 +705,7 @@ void corregirRegistroMemoria(Orden memoria[200][200]){
         cin >> corregirOtro;
         }
     }
-system("pause");
+
 }
 
 void guardarMemoriaArchivoNuevo(Orden memoria[200][200]){
